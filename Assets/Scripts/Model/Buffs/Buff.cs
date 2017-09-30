@@ -287,7 +287,7 @@ namespace Scripts.Model.Buffs {
         public int CompareTo(Buff other) {
             return this.turnsRemaining - other.turnsRemaining;
         }
-
+        
         /// <see cref="OnApply(Characters.Stats)"/>
         protected virtual IList<SpellEffect> OnApplyHelper(Characters.Stats owner) {
             return new SpellEffect[0];

@@ -61,6 +61,7 @@ namespace Scripts.Game.Defined.Serialized.Spells {
         }
     }
 
+
     public class Checked : Buff {
 
         public Checked() : base(5, Util.GetSprite("magnifying-glass"), "Checked", "Resource visibility increased.", true) {
