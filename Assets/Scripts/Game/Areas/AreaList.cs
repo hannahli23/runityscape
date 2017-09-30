@@ -33,13 +33,15 @@ namespace Scripts.Game.Areas {
         private static Area CreateRuins(Flags flags, Party party, Page camp, Page quests) {
             return new Area(AreaType.TINY_WOODS,
                     new Stage[] {
-                        GetSampleScene(party),
+                        //GetSampleScene(party),
+                        GetScene1(party),
                         new BattleStage(
                             "Start of adventure",
                             () => new Encounter[] {
                                 new Encounter(FieldNPCs.Villager()),
                                 new Encounter(FieldNPCs.Villager(), FieldNPCs.Villager())
                             }),
+                        GetScene2(party),
                         new BattleStage(
                             "Stronger monsters",
                             () => new Encounter[] {
@@ -84,6 +86,39 @@ namespace Scripts.Game.Areas {
                 new CoroutineAct(SFX.DoMeleeEffect(hero, partner, 1.0f, "Slash_0")),
                 new TextAct(partner, Side.RIGHT, "Ouch."),
                 new TextAct(hero, Side.LEFT, "<color=lime>Wow</color> <color=red>look</color> <color=magenta>at</color> <color=green>this</color> <color=cyan>colored</color> <color=yellow>text</color>!")
+                );
+
+            return scene;
+        }
+
+        private static SceneStage GetScene1(Party party) {
+            Character hero = party.GetCharacter(c => c.HasFlag(Flag.HERO));
+            Character partner = party.GetCharacter(c => c.HasFlag(Flag.PARTNER));
+            Page page = new Page("Test Location");
+
+            SceneStage scene = new SceneStage(
+                page,
+                "Scene 1",
+                new TextAct(hero, Side.LEFT, "Where am I?"),
+                new ActionAct(() => page.AddCharacters(Side.LEFT, hero)),
+                new ActionAct(() => page.AddCharacters(Side.LEFT, partner)),
+                new TextAct(partner, Side.LEFT, "That literally does not matter. Just kill the copyright king okay?"),
+                new TextAct(partner, Side.LEFT, "Let's go kill things and not think about the consequences!")
+                );
+
+            return scene;
+        }
+
+        private static SceneStage GetScene2(Party party) {
+            Character hero = party.GetCharacter(c => c.HasFlag(Flag.HERO));
+            Character partner = party.GetCharacter(c => c.HasFlag(Flag.PARTNER));
+            Page page = new Page("Test Location");
+
+            SceneStage scene = new SceneStage(
+                page,
+                "Scene 2",
+                new TextAct(partner, Side.LEFT, "Okay, we're going to go kill some villagers, but it's okay because they're already dead!"),
+                new ActionAct(() => page.AddCharacters(Side.LEFT, partner))
                 );
 
             return scene;
