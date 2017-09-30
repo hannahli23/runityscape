@@ -1397,7 +1397,7 @@ Camera:
   far clip plane: 10
   field of view: 60
   orthographic: 1
-  orthographic size: 599.86383
+  orthographic size: 605
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2432,6 +2432,8 @@ MonoBehaviour:
   minisplatPrefab: {fileID: 11416896, guid: 842ea4d6193914c49b3ba39247478239, type: 2}
   shroudPrefab: {fileID: 114080071574950810, guid: 730668aa77f4fe6498f5b60baf7a0110,
     type: 2}
+  steamBurstPrefab: {fileID: 114155772575838356, guid: 20199a5fc8958df4ea1fa098e2fc69ff,
+    type: 2}
 --- !u!4 &1358053187
 Transform:
   m_ObjectHideFlags: 0
@@ -2656,7 +2658,7 @@ Prefab:
     - target: {fileID: 224498716422069034, guid: 51418213f1b6b4740b26d9da031d30a4,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 224997241297252168, guid: 51418213f1b6b4740b26d9da031d30a4,
         type: 2}

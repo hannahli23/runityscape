@@ -1,4 +1,5 @@
-﻿using Scripts.Game.Defined.Spells;
+﻿using Scripts.Game.Defined.Serialized.Spells;
+using Scripts.Game.Defined.Spells;
 using Scripts.Model.Buffs;
 using Scripts.Model.Characters;
 using Scripts.Model.Spells;
@@ -6,7 +7,39 @@ using Scripts.Model.Stats;
 using System;
 using System.Collections.Generic;
 
-namespace Scripts.Game.Defined.Serialized.Spells {
+namespace Scripts.Game.Defined.Serialized.Buffs {
+
+    public class Ignited : Buff {
+        private const int DAMAGE_PER_TURN = 1;
+        private const int DURATION = 5;
+
+        public Ignited()
+            : base(DURATION,
+                  Util.GetSprite("fire"),
+                  "Ignited",
+                  string.Format("Take {0} damage at end of turn.",
+                      DAMAGE_PER_TURN), true) {
+        }
+
+        protected override IList<SpellEffect> OnEndOfTurnHelper(Stats owner) {
+            return new SpellEffect[] {
+                new AddToModStat(owner, StatType.HEALTH, -DAMAGE_PER_TURN)
+            };
+        }
+    }
+
+    public class Insight : Buff {
+        private const int MANA_RECOVERED_PER_TURN = 5;
+
+        public Insight() : base(Util.GetSprite("water-drop"), "Insight", "Regenerating mana.", false) {
+        }
+
+        protected override IList<SpellEffect> OnEndOfTurnHelper(Stats owner) {
+            return new SpellEffect[] {
+                new AddToModStat(owner, StatType.MANA, MANA_RECOVERED_PER_TURN)
+            };
+        }
+    }
 
     public class DamageResist : Buff {
         private const float DAMAGE_MULTIPLIER = 0.7f;
@@ -14,7 +47,7 @@ namespace Scripts.Game.Defined.Serialized.Spells {
         public DamageResist()
             : base(Util.GetSprite("round-shield"),
                   "Damage Resist",
-                  String.Format("Reduces incident damage by {0} %.",
+                  String.Format("Reduces incident damage by {0}%.",
                       (1 - DAMAGE_MULTIPLIER)), false) { }
 
         protected override void ReactHelper(Spell spellToReactTo, Stats owner) {
@@ -56,7 +89,7 @@ namespace Scripts.Game.Defined.Serialized.Spells {
 
         protected override IList<SpellEffect> OnEndOfTurnHelper(Model.Characters.Stats owner) {
             return new SpellEffect[] {
-                new AddToModStat(owner, StatType.HEALTH, BuffCaster.GetStatCount(Stats.Get.MOD_AND_EQUIP, StatType.STRENGTH))
+                new AddToModStat(owner, StatType.HEALTH, BuffCaster.GetStatCount(Stats.Get.TOTAL, StatType.STRENGTH))
             };
         }
     }
@@ -90,7 +123,7 @@ namespace Scripts.Game.Defined.Serialized.Spells {
     }
 
     public class Counter : Buff {
-        private int DAMAGE_RATIO_FROM_ATTACK = 4;
+        private int DAMAGE_RATIO_FROM_ATTACK = 2;
 
         public Counter() : base(2, Util.GetSprite("round-shield"), "Counter", "Basic <color=yellow>Attack</color>s on this unit are reflected.", false) {
         }
@@ -103,7 +136,8 @@ namespace Scripts.Game.Defined.Serialized.Spells {
             spellToReactTo.Result.Effects.Clear();
             spellToReactTo.Result.AddEffect(
                 new AddToModStat(
-                    spellToReactTo.Caster.Stats, StatType.HEALTH, -spellToReactTo.Caster.Stats.GetStatCount(Stats.Get.MOD, StatType.STRENGTH) * 4)
+                    spellToReactTo.Caster.Stats, StatType.HEALTH,
+                    -spellToReactTo.Caster.Stats.GetStatCount(Stats.Get.MOD, StatType.STRENGTH) * DAMAGE_RATIO_FROM_ATTACK)
                 );
         }
     }
@@ -139,6 +173,7 @@ namespace Scripts.Game.Defined.Serialized.Spells {
     }
 
     public class ReflectAttack : Buff {
+        private const int REFLECT_DAMAGE_RATIO = 1;
 
         public ReflectAttack() : base(Util.GetSprite("round-shield"), "Reflect Attack", "Next <color=yellow>Attack</color> on this unit is reflected.", false) {
         }
@@ -161,13 +196,26 @@ namespace Scripts.Game.Defined.Serialized.Spells {
             foreach (SpellEffect se in spellToReactTo.Result.Effects) {
                 AddToModStat damageHealth = se as AddToModStat;
                 if (damageHealth != null && damageHealth.AffectedStat == StatType.HEALTH) {
-                    damageToReflect = damageHealth.Value;
+                    damageToReflect = damageHealth.Value * REFLECT_DAMAGE_RATIO;
                 }
             }
             spellToReactTo.Result.AddEffect(
                 new AddToModStat(
                     spellToReactTo.Caster.Stats, StatType.HEALTH, damageToReflect)
                 );
+        }
+    }
+
+    public class Restore : Buff {
+        private const int REGEN_PER_TURN = 1;
+
+        public Restore() : base(Util.GetSprite("health-normal"), "Restore", String.Format("Restores {0} health each turn.", REGEN_PER_TURN), false) {
+        }
+
+        protected override IList<SpellEffect> OnEndOfTurnHelper(Model.Characters.Stats owner) {
+            return new SpellEffect[] {
+                new AddToModStat(owner, StatType.HEALTH, REGEN_PER_TURN)
+            };
         }
     }
 }

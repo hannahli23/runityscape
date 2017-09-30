@@ -58,9 +58,15 @@ namespace Scripts.Game.Areas {
                                 new Encounter(Music.BOSS, FieldNPCs.Healer(), FieldNPCs.BigKnight(), FieldNPCs.Healer())
                             }),
                         new BattleStage(
-                            "VS " + FieldNPCs.Replicant().Look.Name,
+                            "Ancient Magicks",
                             () => new Encounter[] {
-                                new Encounter(Music.BOSS, FieldNPCs.Healer(), FieldNPCs.Replicant(), FieldNPCs.Healer())
+                                new Encounter(FieldNPCs.Wizard()),
+                                new Encounter(FieldNPCs.Wizard(), FieldNPCs.Wizard())
+                            }),
+                        new BattleStage(
+                            "The Replicant",
+                            () => new Encounter[] {
+                                new Encounter(Music.CREEPY, FieldNPCs.Healer(), FieldNPCs.Replicant(), FieldNPCs.Healer())
                             }),
                     },
                     new PageGroup[] { FieldNPCs.AppleDealer(camp, flags, party) }
