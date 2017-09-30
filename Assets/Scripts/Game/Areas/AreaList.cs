@@ -60,9 +60,16 @@ namespace Scripts.Game.Areas {
                                 new Encounter(Music.BOSS, FieldNPCs.Healer(), FieldNPCs.BigKnight(), FieldNPCs.Healer())
                             }),
                         new BattleStage(
-                            "VS " + FieldNPCs.Replicant().Look.Name,
+                            "Ancient Magicks",
                             () => new Encounter[] {
-                                new Encounter(Music.BOSS, FieldNPCs.Healer(), FieldNPCs.Replicant(), FieldNPCs.Healer())
+                                new Encounter(FieldNPCs.Wizard()),
+                                new Encounter(FieldNPCs.Wizard(), FieldNPCs.Wizard())
+                            }),
+                        GetSceneBoss1(party),
+                        new BattleStage(
+                            "The Replicant",
+                            () => new Encounter[] {
+                                new Encounter(Music.CREEPY, FieldNPCs.Healer(), FieldNPCs.Replicant(), FieldNPCs.Healer())
                             }),
                     },
                     new PageGroup[] { FieldNPCs.AppleDealer(camp, flags, party) }
@@ -102,8 +109,8 @@ namespace Scripts.Game.Areas {
                 new TextAct(hero, Side.LEFT, "Where am I?"),
                 new ActionAct(() => page.AddCharacters(Side.LEFT, hero)),
                 new ActionAct(() => page.AddCharacters(Side.LEFT, partner)),
-                new TextAct(partner, Side.LEFT, "That literally does not matter. Just kill the copyright king okay?"),
-                new TextAct(partner, Side.LEFT, "Let's go kill things and not think about the consequences!")
+                new TextAct(partner, Side.LEFT, "That literally does not matter. Just follow me and kill things okay?"),
+                new TextAct(partner, Side.LEFT, "Our goal is to kill the King so emulate Guts from Berserk please!")
                 );
 
             return scene;
@@ -117,8 +124,28 @@ namespace Scripts.Game.Areas {
             SceneStage scene = new SceneStage(
                 page,
                 "Scene 2",
-                new TextAct(partner, Side.LEFT, "Okay, we're going to go kill some villagers, but it's okay because they're already dead!"),
-                new ActionAct(() => page.AddCharacters(Side.LEFT, partner))
+                new TextAct(partner, Side.RIGHT, "Okay, we're going to go kill some villagers"),
+                new TextAct(hero, Side.LEFT, "That doesn't sound very ethical..."),
+                new TextAct(hero, Side.LEFT, "Shut up! They're already dead anyways. We'll just make them deader!")
+                );
+
+            return scene;
+        }
+
+        private static SceneStage GetSceneBoss1(Party party) {
+            Character hero = party.GetCharacter(c => c.HasFlag(Flag.HERO));
+            Character partner = party.GetCharacter(c => c.HasFlag(Flag.PARTNER));
+            Page page = new Page("Test Location");
+
+            SceneStage scene = new SceneStage(
+                page,
+                "Scene Before",
+                new ActionAct(() => page.AddCharacters(Side.LEFT, hero)),
+                new ActionAct(() => page.AddCharacters(Side.RIGHT, partner)),
+                new TextAct(partner, Side.LEFT, "We're at the boss already!"),
+                new TextAct(partner, Side.LEFT, "I'm impressed you're not dead, so try not to die trying to destroy this boss"),
+                new TextAct(partner, Side.LEFT, "It was a pain trying to train you, so I'd rather not go through it again."),
+                new TextAct(partner, Side.LEFT, "Or else I might just leave this world to rot!")
                 );
 
             return scene;

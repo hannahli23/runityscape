@@ -1,9 +1,6 @@
 ﻿using Scripts.Model.Buffs;
-using Scripts.Model.Spells;
-using Scripts.Presenter;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using System.Collections;
@@ -26,11 +23,6 @@ namespace Scripts.Model.Characters {
     public class Buffs : IEnumerable<Buff>, ISaveable<CharacterBuffsSave> {
 
         /// <summary>
-        /// Set in character.
-        /// </summary>
-        public Stats Stats;
-
-        /// <summary>
         /// Adds a splat detailing something about the buff.
         /// </summary>
         public Action<SplatDetails> AddSplat;
@@ -40,11 +32,18 @@ namespace Scripts.Model.Characters {
         /// </summary>
         private HashSet<Buff> set;
 
+        /// <summary>
+        /// Stats of the owner character.
+        /// </summary>
+        private Stats ownerStats;
+
         // Temporary fields used in serializable, will be null otherwise
         private List<Character> partyMembers;
+
         private bool isSetupTempFieldsBefore;
 
-        public Buffs() {
+        public Buffs(Stats ownerStats) {
+            this.ownerStats = ownerStats;
             set = new HashSet<Buff>(new IdNumberEqualityComparer<Buff>());
             this.AddSplat = (a => { });
         }
@@ -65,7 +64,7 @@ namespace Scripts.Model.Characters {
         /// <param name="buff">Buff to add.</param>
         public void AddBuff(Buff buff) {
             Util.Assert(buff.BuffCaster != null, "Buff's caster is null.");
-            buff.OnApply(Stats);
+            buff.OnApply(ownerStats);
             set.Add(buff);
             AddSplat(new SplatDetails(Color.green, string.Format("+"), buff.Sprite));
         }
@@ -78,11 +77,13 @@ namespace Scripts.Model.Characters {
         public void RemoveBuff(RemovalType type, Buff buff) {
             switch (type) {
                 case RemovalType.TIMED_OUT:
-                    buff.OnTimeOut(Stats);
+                    buff.OnTimeOut(ownerStats);
                     break;
+
                 case RemovalType.DISPEL:
-                    buff.OnDispell(Stats);
+                    buff.OnDispell(ownerStats);
                     break;
+
                 default:
                     Util.Assert(false, "Unknown removal type: " + type);
                     break;
@@ -92,6 +93,16 @@ namespace Scripts.Model.Characters {
             if (buff.IsDispellable || type == RemovalType.TIMED_OUT) {
                 set.Remove(buff);
                 AddSplat(new SplatDetails(Color.red, string.Format("-"), buff.Sprite));
+            }
+        }
+
+        /// <summary>
+        /// Dispels all buffs.
+        /// </summary>
+        public void DispelAllBuffs() {
+            Buff[] allBuffs = set.ToArray();
+            foreach (Buff buff in allBuffs) {
+                RemoveBuff(RemovalType.DISPEL, buff);
             }
         }
 

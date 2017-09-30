@@ -1397,7 +1397,7 @@ Camera:
   far clip plane: 10
   field of view: 60
   orthographic: 1
-  orthographic size: 599.86383
+  orthographic size: 605
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2431,6 +2431,8 @@ MonoBehaviour:
   lightningPrefab: {fileID: 11408236, guid: 04d1533820e41f543a1ea7eafd76cd02, type: 2}
   minisplatPrefab: {fileID: 11416896, guid: 842ea4d6193914c49b3ba39247478239, type: 2}
   shroudPrefab: {fileID: 114080071574950810, guid: 730668aa77f4fe6498f5b60baf7a0110,
+    type: 2}
+  steamBurstPrefab: {fileID: 114155772575838356, guid: 20199a5fc8958df4ea1fa098e2fc69ff,
     type: 2}
 --- !u!4 &1358053187
 Transform:
